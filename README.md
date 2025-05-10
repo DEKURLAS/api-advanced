@@ -19,3 +19,5 @@
    ```bash
    git clone https://github.com/DEKURLAS/api-advanced.git
    cd api-advanced
+   npm i
+   node app.js
