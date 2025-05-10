@@ -1,0 +1,7 @@
+{
+    "root": {
+        "time": 500,
+        "maxCons": 5,
+        "curCons": 0
+    }
+}

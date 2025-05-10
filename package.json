@@ -1,0 +1,13 @@
+{
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "axios": "^0.21.4",
+    "ejs": "^3.1.6",
+    "express": "^4.17.1",
+    "forever": "^4.0.1",
+    "node-fetch": "^2.6.1",
+    "ssh2": "^1.5.0"
+  }
+}
