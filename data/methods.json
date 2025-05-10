@@ -1,0 +1,17 @@
+{
+  "https": {
+    "file": "socket-v15",
+    "folder": "methods",
+    "input": "./[file] GET [ip] 300.txt [time] 64 15"
+  },
+  "HOME-LT": {
+      "file": "home",
+      "folder": "methods",
+      "input": "./[file] [ip] [port] [time]"
+  },
+  "stop-all": {
+      "file": "test",
+      "folder": "methods",
+      "input": "pkill screen"
+  }
+}

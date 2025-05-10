@@ -1,0 +1,9 @@
+{
+  "free": {
+    "admin": true,
+    "concurrents": 10,
+    "time": 300,
+    "networks": ["normal", "vip", "elite"],
+    "expire": "3/27/2023"
+  }
+}

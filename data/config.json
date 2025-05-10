@@ -1,0 +1,9 @@
+{
+  "express": {
+    "ports": [80, 443]
+  },
+  "regex": {
+    "ip": "([0-9]{1,3}\\.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}|http:\/\/[aA-zZ0-9]{1,500}.[aA-zZ0-9]{1,500}|https:\/\/[aA-zZ0-9]{1,500}.[aA-zZ0-9]{1,500})"
+  },
+  "webhook": "https://discord.com/api/webhooks/1112060015885439098/ax_-6hmTvVvcfkM29-qcqLNFlOxvUWi35qfplJZagIb6vnrVCiakTiXK3AF27Uwvuh9B"
+}

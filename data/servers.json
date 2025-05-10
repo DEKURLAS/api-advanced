@@ -1,0 +1,11 @@
+{  
+        "185.237.165.214": {
+        "type": "password",
+        "username": "root",
+        "password": "L7server",
+        "running": 0,
+        "max": 10,
+        "networks": ["normal", "vip", "elite"],
+        "attacking": []
+    }
+}
