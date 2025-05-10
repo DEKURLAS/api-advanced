@@ -19,5 +19,8 @@
    ```bash
    git clone https://github.com/DEKURLAS/api-advanced.git
    cd api-advanced
+   ```
+2. Install modules and start server:
+   ```bash
    npm i
    node app.js
